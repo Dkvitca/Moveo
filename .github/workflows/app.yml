@@ -20,7 +20,26 @@ jobs:
 
       - name: Test NGINX Configuration
         run: | 
-          docker run --rm nginx-app nginx -t
+            # Start NGINX container
+            docker run -d --name nginx-test -p 8080:80 nginx-app
+
+            # Wait for NGINX to start
+            sleep 2
+
+            # Perform a simple sanity check
+            STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:80)
+
+            if [[ "$STATUS_CODE" -ne 200 ]]; then
+              echo "Error: Expected HTTP 200, but got $STATUS_CODE"
+              docker logs nginx-test  # Print logs for debugging
+              exit 1
+            fi
+
+            echo "NGINX is running and responding with 200 OK"
+
+            # Cleanup
+            docker stop nginx-test
+            docker rm nginx-test
 
   publish:
     if: github.ref == 'refs/heads/main'  # Publish only on main
