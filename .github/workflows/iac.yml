@@ -79,7 +79,7 @@ jobs:
           fi
 
           # Update README.md in root directory
-          sed -i "s|Application URL: .*|Application URL: http://$ALB_DNS|" README.md
+          sed -i "s|Application URL: .*|Application URL: $ALB_DNS|" README.md
 
           # Configure Git with GitHub Actions identity
           git config --global user.email "github-actions@github.com"
