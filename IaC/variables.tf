@@ -8,3 +8,4 @@ variable "min_size" {}
 variable "max_size" {}
 variable "ami_id" {}
 variable "init_path" {}
+ 

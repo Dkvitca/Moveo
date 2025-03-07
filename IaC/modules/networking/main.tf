@@ -13,6 +13,9 @@ resource "aws_subnet" "public_subnet" {
   cidr_block              = var.public_subnet_cidrs[count.index]
   map_public_ip_on_launch = true
   availability_zone       = var.azs[count.index]
+  tags = {
+    Name = "public-subnet-${count.index + 1}"
+  }
 }
 
 # Private Subnets
@@ -21,6 +24,9 @@ resource "aws_subnet" "private_subnet" {
   vpc_id         = aws_vpc.my_vpc.id
   cidr_block     = var.private_subnet_cidrs[count.index]
   availability_zone = var.azs[count.index]
+  tags = {
+    Name = "private-subnet-${count.index + 1}"
+  }
 }
 
 resource "aws_security_group" "alb_sg" {
@@ -89,6 +95,7 @@ resource "aws_security_group" "vpc_endpoint_sg" {
 # Internet Gateway
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.my_vpc.id
+  tags   = { Name = "igw" }
 }
 
 # Public Route Table

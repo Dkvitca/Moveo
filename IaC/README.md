@@ -6,8 +6,6 @@
 
 REMOVE THE IAM ROLE OF ADMIN AND TEST FOR FAILURE
 7) github actions. -> add cron job for deployment between hours.
-1) multi enviorment.
-2) output after terraform apply, get the alb dns.
 ##
 3) add email functionality. either sns, consumer.
 ##

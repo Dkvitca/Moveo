@@ -2,12 +2,12 @@
 # Networking Module (VPC, Subnets, Security Groups)
 module "networking" {
   source               = "./modules/networking"
-  vpc_cidr             = var.vpc_cidr
+  vpc_cidr             = var.vpc_cidr 
   public_subnet_cidrs  = var.public_subnet_cidrs
   private_subnet_cidrs = var.private_subnet_cidrs
   azs                  = var.availability_zones
-  aws_region           = var.aws_region
-}
+  aws_region           = var.aws_region 
+}  
 
 # Compute Module (EC2 + ALB + ASG)
 module "compute" {
