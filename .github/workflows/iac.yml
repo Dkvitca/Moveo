@@ -30,7 +30,7 @@ jobs:
         working-directory: IaC
 
       - name: Terraform Validate
-        run: terraform validate -var-file="terraform.tfvars"
+        run: terraform validate 
         working-directory: IaC
 
       - name: Terraform Plan
