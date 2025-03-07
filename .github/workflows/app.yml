@@ -61,12 +61,3 @@ jobs:
       - name: Push Image to ECR
         run: docker push ${{ secrets.ECR_REGISTRY }}:$NEW_VERSION
 
-      - name: Update `init.sh` with New Image Version
-        run: |
-          sed -i "s|IMAGE_VERSION=\"[^\"]*\"|IMAGE_VERSION=\"$NEW_VERSION\"|" IaC/scripts/init.sh
-          git config --global user.email "github-actions@github.com"
-          git config --global user.name "GitHub Actions"
-          git add IaC/scripts/init.sh
-          git commit -m "Update user_data script with image version $NEW_VERSION"
-          git push
-

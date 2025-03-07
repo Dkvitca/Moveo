@@ -12,7 +12,8 @@ ECR_REPOSITORY="686255960799.dkr.ecr.ap-south-1.amazonaws.com/deployment"
 aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPOSITORY
 
 # Pull the image from ECR
-$IMAGE_VERSION="1.0"
+# Get the most recent image tag
+IMAGE_VERSION=$(aws ecr describe-images --repository-name deployment --query 'sort_by(imageDetails,& imagePushedAt)[-1].imageTags[0]' --output text)$IMAGE_VERSION="1.0"
 docker pull "$ECR_REPOSITORY:$IMAGE_VERSION"
 
 # Stop and remove any existing container (if running)
