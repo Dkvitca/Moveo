@@ -61,25 +61,36 @@ jobs:
 
       - name: Terraform Apply
         run: |
+          echo "Starting Terraform Apply..."
           terraform apply -auto-approve -var-file="terraform.tfvars"
-          echo "ALB_DNS=$(terraform output -raw alb_dns)" >> $GITHUB_ENV
         working-directory: IaC
 
       - name: ALB DNS Publish/Update
         id: get-alb-dns
         env:
-          GITHUB_TOKEN: ${{ secrets.REPO_AC }}  # Use GitHub PAT (Personal Access Token)
+          GITHUB_TOKEN: ${{ secrets.REPO_AC }}
         run: |
-          # Update README.md with the ALB DNS
+        
+          ALB_DNS=$(aws elbv2 describe-load-balancers --names nginx-alb --query "LoadBalancers[0].DNSName" --output text --region "$AWS_REGION")
+          # Print the first few lines of README to verify changes
+          head README.md
+
+          echo "Updating README.md with new ALB DNS..."
           sed -i "s|Application URL: .*|Application URL: http://$ALB_DNS|" README.md
+
+          echo "Checking if README.md has been updated..."
+          grep "Application URL" README.md || echo "No match found."
 
           # Configure Git and push the changes
           git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
           git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git
 
+          echo "Adding README.md to Git..."
           git add README.md
           git commit -m "Update ALB DNS in README.md"
+
+          echo "Pushing changes to main branch..."
           git push origin main
 
 
