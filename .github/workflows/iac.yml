@@ -92,5 +92,6 @@ jobs:
           git add README.md
           git commit -m "Update ALB DNS in README.md"
           git push origin main
+        working-directory: IaC
 
 
