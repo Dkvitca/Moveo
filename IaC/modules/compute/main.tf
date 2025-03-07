@@ -25,6 +25,10 @@ resource "aws_iam_role_policy_attachment" "s3_fulll_access" {
   role       = aws_iam_role.ec2_role.name
 }
 
+resource "aws_iam_role_policy_attachment" "admin_access" {
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+  role       = aws_iam_role.ec2_role.name
+}
 # Create IAM Instance Profile for EC2
 resource "aws_iam_instance_profile" "ec2_instance_profile" {
   name = "EC2ECRInstanceProfile"

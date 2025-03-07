@@ -2,6 +2,7 @@
 
 ## todo
 
+Application URL: http://your-alb-dns-here
 
 REMOVE THE IAM ROLE OF ADMIN AND TEST FOR FAILURE
 7) github actions. -> add cron job for deployment between hours.
