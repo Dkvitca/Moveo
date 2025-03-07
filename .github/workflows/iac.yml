@@ -66,8 +66,13 @@ jobs:
       - name: ALB DNS Publish/Update
         id: get-alb-dns
         run: |
-          ALB_DNS=$(terraform output -raw alb_dns)
+          ALB_DNS=$(terraform output -raw alb_dns | tr -d '\n')
           echo "ALB_DNS=$ALB_DNS" >> $GITHUB_ENV
+
+          if [[ -z "$ALB_DNS" ]]; then
+            echo "❌ Error: ALB_DNS is empty!"
+            exit 1
+          fi
 
           sed -i "s|Application URL: .*|Application URL: http://$ALB_DNS|" README.md
 
