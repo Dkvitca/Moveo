@@ -1,0 +1,46 @@
+name: Scheduled Infrastructure Management
+
+on:
+  schedule:
+    - cron: '0 9 * * 0-4'  # Build infra at 09:00 AM between sunday and thursday
+    - cron: '0 21 * * 0-4' # Destroy infra at 09:00 PM between sunday and thursday
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: IaC
+
+      - name: Terraform Plan
+        run: terraform plan -var-file="terraform.tfvars"
+        working-directory: IaC
+
+      - name: Apply or Destroy Terraform Resources
+        run: |
+          HOUR=$(date +%H)
+          if [[ "$HOUR" == "09" ]]; then
+            echo "Running Terraform Apply (Building infrastructure)"
+            terraform apply -auto-approve -var-file="terraform.tfvars"
+          elif [[ "$HOUR" == "21" ]]; then
+            echo "Running Terraform Destroy (Tearing down infrastructure)"
+            terraform destroy -auto-approve -var-file="terraform.tfvars"
+          else
+            echo "❌ Unexpected execution time: Skipping..."
+            exit 1
+          fi
+        working-directory: IaC

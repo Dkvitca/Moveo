@@ -79,7 +79,7 @@ jobs:
           # Compare values
           # If ALB DNS is the same as the existing one, skip the update, to avoid errors.
           if [[ "$ALB_DNS" == "$EXISTING_ALB_DNS" ]]; then
-            echo "✅ ALB DNS is already up-to-date. No update needed."
+            echo "ALB DNS is already up-to-date. No update needed."
             exit 0  # Skip further execution
           fi
 
