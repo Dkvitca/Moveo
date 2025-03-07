@@ -44,6 +44,7 @@ resource "aws_lb" "nginx_alb" {
   }
 }
 
+# Target Group
 resource "aws_lb_target_group" "nginx_tg" {
   name     = "nginx-tg"
   port     = 80
@@ -54,6 +55,7 @@ resource "aws_lb_target_group" "nginx_tg" {
   }
 }
 
+# Listener
 resource "aws_lb_listener" "nginx_listener" {
   load_balancer_arn = aws_lb.nginx_alb.arn
   port              = 80
