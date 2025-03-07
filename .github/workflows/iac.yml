@@ -60,7 +60,9 @@ jobs:
         working-directory: IaC
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve -var-file="terraform.tfvars"
+        run: |
+          terraform apply -auto-approve -var-file="terraform.tfvars"
+          echo "ALB_DNS=$(terraform output -raw alb_dns)" >> $GITHUB_ENV
         working-directory: IaC
 
       - name: ALB DNS Publish/Update
@@ -68,30 +70,16 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_AC }}  # Use GitHub PAT (Personal Access Token)
         run: |
-          # Retrieve ALB DNS and remove newlines
-          ALB_DNS=$(terraform output -raw alb_dns | tr -d '[:space:]')
-          echo "ALB_DNS=$ALB_DNS" >> $GITHUB_ENV
+          # Update README.md with the ALB DNS
+          sed -i "s|Application URL: .*|Application URL: http://$ALB_DNS|" README.md
 
-          # Check if ALB_DNS is empty
-          if [[ -z "$ALB_DNS" ]]; then
-            echo "❌ Error: ALB_DNS is empty!"
-            exit 1
-          fi
-
-          # Update README.md in root directory
-          sed -i "s|Application URL: .*|Application URL: $ALB_DNS|" README.md
-
-          # Configure Git with GitHub Actions identity
+          # Configure Git and push the changes
           git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
-
-          # Authenticate with GitHub using Personal Access Token (PAT)
           git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git
 
-          # Commit and push changes
           git add README.md
           git commit -m "Update ALB DNS in README.md"
           git push origin main
-        working-directory: IaC
 
 
