@@ -34,7 +34,7 @@ jobs:
         working-directory: IaC
 
       - name: Terraform Plan
-        run: terraform plan -out=tfplan -var-file="terraform.tfvars"
+        run: terraform plan -var-file="terraform.tfvars"
         working-directory: IaC
 
   deploy:
@@ -56,5 +56,5 @@ jobs:
         uses: hashicorp/setup-terraform@v2
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve tfplan
+        run: terraform apply -auto-approve -var-file="terraform.tfvars"
         working-directory: IaC
