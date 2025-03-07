@@ -69,7 +69,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.REPO_AC }}  # Use GitHub PAT (Personal Access Token)
         run: |
           # Retrieve ALB DNS and remove newlines
-          ALB_DNS=$(terraform output -raw alb_dns | tr -d '\n')
+          ALB_DNS=$(terraform output -raw alb_dns)
           echo "ALB_DNS=$ALB_DNS" >> $GITHUB_ENV
 
           # Check if ALB_DNS is empty
