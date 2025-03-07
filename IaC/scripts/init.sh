@@ -21,7 +21,7 @@ docker stop nginx-server 2>/dev/null || true
 docker rm nginx-server 2>/dev/null || true
 
 # Run the container
-docker run -d -p 80:80 --name nginx-server $ECR_REPOSITORY:latest
+docker run -d -p 80:80 --name nginx-server $ECR_REPOSITORY:$IMAGE_VERSION
 
 # Ensure the container starts on reboot
 echo "@reboot root docker start nginx-server" >> /etc/crontab
