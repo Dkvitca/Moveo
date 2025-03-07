@@ -62,3 +62,18 @@ jobs:
       - name: Terraform Apply
         run: terraform apply -auto-approve -var-file="terraform.tfvars"
         working-directory: IaC
+
+      - name: ALB DNS Publish/Update
+        id: get-alb-dns
+        run: |
+          ALB_DNS=$(terraform output -raw alb_dns)
+          echo "ALB_DNS=$ALB_DNS" >> $GITHUB_ENV
+
+          sed -i "s|Application URL: .*|Application URL: http://$ALB_DNS|" README.md
+
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git add README.md
+          git commit -m "Update ALB DNS in README.md"
+          git push origin main
+
