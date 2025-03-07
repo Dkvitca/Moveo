@@ -27,7 +27,7 @@ jobs:
             sleep 2
 
             # Perform a simple sanity check
-            STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:80)
+            STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080)
 
             if [[ "$STATUS_CODE" -ne 200 ]]; then
               echo "Error: Expected HTTP 200, but got $STATUS_CODE"
