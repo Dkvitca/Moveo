@@ -1,0 +1,71 @@
+name: App Pipeline
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+    paths:
+      - 'app/**'
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Build Docker Image
+        run: docker build -t nginx-app app/
+
+      - name: Test NGINX Configuration
+        run: | 
+          docker run --rm nginx-app nginx -t
+
+  publish:
+    if: github.ref == 'refs/heads/main'  # Push Docker only on main
+    runs-on: ubuntu-latest
+    needs: build-test
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Authenticate with AWS ECR
+        run: aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
+
+      - name: Get Latest Image Version & Bump
+        id: get-version
+        run: |
+          LATEST_TAG=$(aws ecr describe-images --repository-name nginx-app --query 'sort_by(imageDetails,& imagePushedAt)[-1].imageTags[0]' --output text)
+          if [[ "$LATEST_TAG" == "None" ]]; then
+            NEW_VERSION="1.0"
+          else
+            VERSION_X=$(echo $LATEST_TAG | cut -d'.' -f1)
+            VERSION_Y=$(echo $LATEST_TAG | cut -d'.' -f2)
+            NEW_VERSION="$VERSION_X.$((VERSION_Y + 1))"
+          fi
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+
+      - name: Build and Tag Image
+        run: |
+          docker build -t nginx-app:$NEW_VERSION app/
+          docker tag nginx-app:$NEW_VERSION ${{ secrets.ECR_REGISTRY }}/nginx-app:$NEW_VERSION
+
+      - name: Push Image to ECR
+        run: docker push ${{ secrets.ECR_REGISTRY }}/nginx-app:$NEW_VERSION
+
+      - name: Update `terraform.tfvars` with New Image Version
+        run: |
+          sed -i "s|image_version = .*|image_version = \"$NEW_VERSION\"|" IaC/terraform.tfvars
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git add IaC/terraform.tfvars
+          git commit -m "Bump image version to $NEW_VERSION"
+          git push
