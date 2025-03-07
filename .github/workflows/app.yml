@@ -56,10 +56,10 @@ jobs:
       - name: Build and Tag Image
         run: |
           docker build -t nginx-app:$NEW_VERSION app/
-          docker tag nginx-app:$NEW_VERSION ${{ secrets.ECR_REGISTRY }}/nginx-app:$NEW_VERSION
+          docker tag nginx-app:$NEW_VERSION ${{ secrets.ECR_REGISTRY }}/deployment:$NEW_VERSION
 
       - name: Push Image to ECR
-        run: docker push ${{ secrets.ECR_REGISTRY }}/nginx-app:$NEW_VERSION
+        run: docker push ${{ secrets.ECR_REGISTRY }}/deployment:$NEW_VERSION
 
       - name: Update `init.sh` with New Image Version
         run: |
