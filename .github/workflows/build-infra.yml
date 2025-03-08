@@ -37,5 +37,4 @@ jobs:
         working-directory: IaC
 
       - name: Update ALB DNS in README
-        run: ./scripts/alb_publish.sh
-        working-directory: IaC
+        run: ./IaC/scripts/alb_publish.sh
