@@ -70,3 +70,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_AC }}
         run: ./scripts/alb_publish.sh
+        working-directory: IaC
