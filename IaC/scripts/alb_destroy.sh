@@ -13,7 +13,7 @@ fi
 # Commit and push changes.
 git config --global user.email "github-actions@github.com"
 git config --global user.name "GitHub Actions"
-git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git
+git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
 
 echo "Adding README.md to Git..."
 git add README.md
