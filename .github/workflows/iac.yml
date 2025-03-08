@@ -1,14 +1,18 @@
-name: Build Infrastructure
+name: IaC Pipeline
 
 on:
-  schedule:
-    - cron: '0 9 * * 0-4'  # Run at 09:00 AM (Sunday - Thursday)
+  push:
+    branches:
+      - develop
+      - main
+    paths:
+      - 'IaC/**'
 
 jobs:
-  build:
+  terraform:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Configure AWS Credentials
@@ -25,16 +29,45 @@ jobs:
         run: terraform init
         working-directory: IaC
 
-      - name: Terraform Plan
-        run: terraform plan -var-file="terraform.tfvars"
+      - name: Terraform Validate
+        run: terraform validate 
         working-directory: IaC
 
-      - name: Apply Terraform (Build Infra)
+      - name: Terraform Plan
+        run: terraform plan   -var-file="terraform.tfvars"
+        working-directory: IaC
+
+  deploy:
+    if: github.ref == 'refs/heads/main'  # Deploy only on main branch
+    runs-on: ubuntu-latest
+    needs: terraform
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Terraform Init (Reinitialize Backend)
+        run: terraform init -reconfigure
+        working-directory: IaC
+
+      - name: Terraform Apply
         run: |
-          echo "Applying Terraform to build infrastructure..."
+          echo "Starting Terraform Apply..."
           terraform apply -auto-approve -var-file="terraform.tfvars"
         working-directory: IaC
 
-      - name: Update ALB DNS in README
+      - name: ALB DNS Publish/Update
+        id: get-alb-dns
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_AC }}
         run: ./scripts/alb_publish.sh
         working-directory: IaC
