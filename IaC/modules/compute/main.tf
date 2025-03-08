@@ -67,6 +67,10 @@ resource "aws_lb_listener" "nginx_listener" {
 }
 
 # Launch Template with IAM Role for ECR
+
+# Note: the image ID used here is of a custom AMI that was created. 
+# This image has docker and aws cli pre installed.
+# This is not the best practice, but is done for the sake of this demo.
 resource "aws_launch_template" "nginx_lt" {
   name_prefix   = "nginx-lt"
   image_id      = var.ami_id

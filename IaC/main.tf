@@ -1,5 +1,4 @@
 
-# Networking Module (VPC, Subnets, Security Groups)
 module "networking" {
   source               = "./modules/networking"
   vpc_cidr             = var.vpc_cidr 
@@ -9,7 +8,6 @@ module "networking" {
   aws_region           = var.aws_region 
 }  
 
-# Compute Module (EC2 + ALB + ASG)
 module "compute" {
   source            = "./modules/compute"
   vpc_id            = module.networking.vpc_id 

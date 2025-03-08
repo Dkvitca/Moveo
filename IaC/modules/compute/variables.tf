@@ -1,10 +1,39 @@
-variable "vpc_id" {}
-variable "public_subnets" {}
-variable "private_subnets" {}
-variable "alb_sg_id" {}
-variable "ec2_sg_id" {}
-variable "desired_capacity" {}
-variable "min_size" {}
-variable "max_size" {}
-variable "ami_id" {}
-variable "init_path" {}
+variable "vpc_id" {
+  type = string
+}
+
+variable "public_subnets" {
+  type = list(string)
+}
+
+variable "private_subnets" {
+  type = list(string)
+}
+
+variable "alb_sg_id" {
+  type = string
+}
+
+variable "ec2_sg_id" {
+  type = string
+}
+
+variable "desired_capacity" {
+  type = number
+}
+
+variable "min_size" {
+  type = number
+}
+
+variable "max_size" {
+  type = number
+}
+
+variable "ami_id" {
+  type = string
+}
+
+variable "init_path" {
+  type = string
+}

@@ -9,5 +9,3 @@ max_size = 2
 aws_region = "ap-south-1"
 ami_id = "ami-06caa9d39211108fc" # Custom ami.
 init_path = "./scripts/init.sh"
-
-

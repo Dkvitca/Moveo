@@ -36,7 +36,7 @@ resource "aws_security_group" "alb_sg" {
     from_port   = 80 
     to_port     = 80 
     protocol    = "tcp" 
-    cidr_blocks = ["0.0.0.0/0"] # Allow access from the internet
+    cidr_blocks = ["0.0.0.0/0"] 
   }
 
   egress {
@@ -71,7 +71,7 @@ resource "aws_security_group" "ec2_sg" {
   tags = { Name = "ec2_sg" }
 }
 
-# Security Group for VPC Endpoints (Restricting Access)
+# Security Group for VPC Endpoints 
 resource "aws_security_group" "vpc_endpoint_sg" {
   vpc_id = aws_vpc.my_vpc.id
 
@@ -86,7 +86,7 @@ resource "aws_security_group" "vpc_endpoint_sg" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"] # Allow responses back
+    cidr_blocks = ["0.0.0.0/0"] 
   }
 
   tags = { Name = "vpc_endpoint_sg" }
