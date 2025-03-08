@@ -89,8 +89,11 @@ jobs:
           echo "Updating README.md with new ALB DNS..."
           sed -i "s|Application URL: .*|Application URL: http://$ALB_DNS|" README.md
 
-          echo "Checking if README.md has been updated..."
-          grep "Application URL" README.md || echo "No match found."
+          # Check if there are actual changes
+          if git diff --exit-code README.md; then
+            echo "No changes detected in README.md. Skipping commit and push."
+            exit 0
+          fi
 
           # Configure Git and push the changes
           git config --global user.email "github-actions@github.com"
