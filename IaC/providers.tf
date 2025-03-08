@@ -1,3 +1,4 @@
+#backend setup
 terraform {
   backend "s3" {
     bucket = "moveo-terraform"
