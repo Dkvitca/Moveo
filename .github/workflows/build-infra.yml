@@ -4,6 +4,7 @@ on:
   schedule:
     #- cron: '0 9 * * 0-4'  # Run at 09:00 AM (Sunday - Thursday)
     - cron: '35 13 * * *'  # Run every day at 15:35 Israel Time (13:35 UTC)
+  workflow_dispatch:
 
 jobs:
   build:
