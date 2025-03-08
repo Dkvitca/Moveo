@@ -8,7 +8,7 @@ systemctl enable docker
 AWS_REGION="ap-south-1"  # Change to your AWS region
 ECR_REPOSITORY="686255960799.dkr.ecr.ap-south-1.amazonaws.com/deployment"
 
-# # Authenticate with ECR (IAM Role allows this without credentials)
+# Authenticate with ECR (IAM Role allows this without credentials)
 aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPOSITORY
 
 # Pull the image from ECR
