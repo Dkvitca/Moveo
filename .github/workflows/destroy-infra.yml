@@ -3,8 +3,7 @@ name: Destroy Infrastructure
 on:
   schedule:
     #- cron: '0 21 * * 0-4'  # Run at 09:00 PM (Sunday - Thursday)
-    - cron: '20 15 * * *'  # Run every day at 15:20 UTC
-
+    - cron: '30 13 * * *'  # Run every day at 15:30 Israel Time (13:30 UTC)
 jobs:
   destroy:
     runs-on: ubuntu-latest
