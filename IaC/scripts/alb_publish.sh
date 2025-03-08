@@ -1,5 +1,5 @@
           ALB_DNS=$(aws elbv2 describe-load-balancers --names nginx-alb --query "LoadBalancers[0].DNSName" --output text --region "$AWS_REGION")
-          
+            # 
           # Extract the existing ALB DNS from README.md
           EXISTING_ALB_DNS=$(grep -oP '(?<=Application URL: ).*' README.md || echo "")
 

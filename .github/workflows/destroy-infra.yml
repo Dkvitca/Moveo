@@ -1,11 +1,12 @@
-name: Build Infrastructure
+name: Destroy Infrastructure
 
 on:
   schedule:
-    - cron: '0 9 * * 0-4'  # Run at 09:00 AM (Sunday - Thursday)
+    #- cron: '0 21 * * 0-4'  # Run at 09:00 PM (Sunday - Thursday)
+    - cron: '20 15 * * *'  # Run every day at 15:20 UTC
 
 jobs:
-  build:
+  destroy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -26,15 +27,15 @@ jobs:
         working-directory: IaC
 
       - name: Terraform Plan
-        run: terraform plan -var-file="terraform.tfvars"
+        run: terraform plan -destroy -var-file="terraform.tfvars"
         working-directory: IaC
 
-      - name: Apply Terraform (Build Infra)
+      - name: Destroy Terraform (Tear Down Infra)
         run: |
-          echo "Applying Terraform to build infrastructure..."
-          terraform apply -auto-approve -var-file="terraform.tfvars"
+          echo "Destroying Terraform infrastructure..."
+          terraform destroy -auto-approve -var-file="terraform.tfvars"
         working-directory: IaC
 
-      - name: Update ALB DNS in README
-        run: ./scripts/alb_publish.sh
+      - name: Update README (Infra Down)
+        run: ./scripts/alb_destroy.sh
         working-directory: IaC
