@@ -113,11 +113,12 @@ schedule:
   - cron: '0 21 * * 0-4' # Destroy at 9 PM (Sun-Thu)
 ```
 
+
 ---
 
 ## Future Updates
 
-This project is continuously evolving. Below are some planned improvements for better security, automation, and scalability:
+🚀 This project is **continuously evolving**. Below are planned improvements for better security, automation, and scalability:
 
 | **Planned Update**                                    | **Description** |
 |------------------------------------------------------|----------------|
@@ -125,3 +126,7 @@ This project is continuously evolving. Below are some planned improvements for b
 | **Implement Rolling Deployments**                   | Introduce a proper rollout strategy for new container images instead of using the latest pushed version in `init.sh` (user_data). |
 | **Fine-Grained Security Groups**                    | Restrict network access to EC2 instances and ALB by defining more precise security group rules. |
 | **Fine-Grained IAM Policies**                       | Minimize permissions for Terraform-managed IAM roles to follow the principle of least privilege. |
+| **Email Notifications for Infrastructure Changes**   | Implement an automated email system to notify stakeholders whenever infrastructure changes (Terraform plan) are detected. |
+| **Require Pull Request Approval Before Applying Changes** | Enforce mandatory pull requests for infrastructure changes, ensuring peer review before applying any modifications. |
+
+---
