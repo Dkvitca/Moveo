@@ -1,4 +1,4 @@
-Application URL: Infrastructure is currently down.
+Application URL: http://nginx-alb-662993006.ap-south-1.elb.amazonaws.com
 
 ---
 
