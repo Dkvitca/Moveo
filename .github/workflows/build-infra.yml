@@ -1,8 +1,8 @@
 name: Build Infrastructure
 
 on:
-  schedule:
-    - cron: '0 7 * * 0-4'   # Run at 09:00 AM (Sunday - Thursday)
+  # schedule:
+  #   - cron: '0 7 * * 0-4'   # Run at 09:00 AM (Sunday - Thursday)
   workflow_dispatch:
 
 jobs:

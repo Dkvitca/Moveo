@@ -1,8 +1,8 @@
 name: Destroy Infrastructure
 
 on:
-  schedule:
-    - cron: '0 19 * * 0-4'  # Run at 09:00 PM (Sunday - Thursday)
+  # schedule:
+  #   - cron: '0 19 * * 0-4'  # Run at 09:00 PM (Sunday - Thursday)
   workflow_dispatch:
 jobs:
   destroy:
